@@ -1,5 +1,6 @@
 "use client"
 import { LandingPageHeader } from "@/components/landing-page/header"
+import { HeroSection } from "@/components/landing-page/hero"
 import { useToggleTheme } from "@/components/use-theme"
 
 const navItems = [
@@ -20,8 +21,9 @@ const navItems = [
 export default function Page() {
   const toggleTheme = useToggleTheme()
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="relative flex min-h-screen w-full flex-col">
       <LandingPageHeader navItems={navItems} />
+      <HeroSection />
     </div>
   )
 }
