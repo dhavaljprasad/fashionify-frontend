@@ -32,12 +32,11 @@ export const ProblemsSection = () => {
       <div className="flex h-fit w-full flex-col items-start justify-center gap-4 lg:max-w-2xl">
         <span className="text-xs font-semibold text-text">THE REALITY</span>
 
-        <div className="flex flex-col items-start justify-center gap-2">
-          <h1 className="text-6xl font-bold text-text">
-            Tailors & cloth sellers face{" "}
-            <span className="text-accent">3 big problems.</span>
-          </h1>
-        </div>
+        <h1 className="text-6xl font-bold text-text">
+          Tailors & cloth sellers face{" "}
+          <span className="text-accent">3 big problems.</span>
+        </h1>
+
         <span className="text-sm text-text">
           I've spent years in my mom's boutique since childhood. The same
           pattern came up again and again.
