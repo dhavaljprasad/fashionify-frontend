@@ -66,7 +66,6 @@ export const HeroSection = () => {
           <ButtonPrimary text="Start Free Trial" icon={ArrowRight} />
           <ButtonSecondary text="See Demo" icon={Play} />
         </div>
-        <div className="jutify-center flex items-start gap-4"></div>
       </div>
       <div className="flex h-full w-full flex-col items-end justify-center gap-4">
         <div className="flex items-center justify-center gap-2">
