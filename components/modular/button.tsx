@@ -5,13 +5,21 @@ import { LucideIcon } from "lucide-react"
 export const ButtonPrimary = ({
   text,
   icon,
+  buttonClass,
+  buttonTextClass,
 }: {
   text: string
   icon?: LucideIcon
+  buttonClass?: string
+  buttonTextClass?: string
 }) => {
   return (
-    <div className="group flex h-auto w-fit cursor-pointer items-center justify-center gap-1 bg-contrast px-4 py-2 transition-colors duration-200 hover:bg-accent">
-      <span className="text-xs font-semibold text-background-primary">
+    <div
+      className={`group flex h-auto w-fit cursor-pointer items-center justify-center gap-1 bg-contrast px-4 py-2 transition-colors duration-200 hover:bg-accent ${buttonClass || ""}`}
+    >
+      <span
+        className={`text-xs font-semibold text-background-primary ${buttonTextClass || ""}`}
+      >
         {text}
       </span>
       {icon && (
@@ -26,18 +34,26 @@ export const ButtonPrimary = ({
 export const ButtonSecondary = ({
   text,
   icon,
+  buttonClass,
+  buttonTextClass,
 }: {
   text: string
   icon?: LucideIcon
+  buttonClass?: string
+  buttonTextClass?: string
 }) => {
   return (
-    <div className="group flex h-auto w-fit cursor-pointer items-center justify-center gap-1 border bg-background-primary px-4 py-2 transition-colors duration-200 hover:bg-contrast">
+    <div
+      className={`group flex h-auto w-fit cursor-pointer items-center justify-center gap-1 border bg-background-primary px-4 py-2 transition-colors duration-200 hover:bg-contrast ${buttonClass || ""}`}
+    >
       {icon && (
         <span className="text-xs font-semibold text-text transition-all group-hover:text-black">
           {React.createElement(icon, { size: 16 })}
         </span>
       )}
-      <span className="text-xs font-semibold text-text transition-all duration-200 group-hover:translate-x-1 group-hover:text-black">
+      <span
+        className={`text-xs font-semibold text-text transition-all duration-200 group-hover:translate-x-1 group-hover:text-black ${buttonTextClass || ""}`}
+      >
         {text}
       </span>
     </div>
