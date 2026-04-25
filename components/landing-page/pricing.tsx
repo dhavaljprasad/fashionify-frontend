@@ -82,7 +82,7 @@ export const PricingSection = () => {
         ))}
       </div>
       <span className="text-center text-sm text-text">
-        Includes <span className="text-semibold">5 free renders</span> to try.
+        Includes <span className="font-semibold">5 free renders</span> to try.
         No credit card needed. Need more? Contact us for custom plans and
         enterprise solutions.
       </span>
