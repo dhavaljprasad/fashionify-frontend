@@ -6,6 +6,7 @@ import { HowItWorksSection } from "@/components/landing-page/how-it-works"
 import { PricingSection } from "@/components/landing-page/pricing"
 import { ProblemsSection } from "@/components/landing-page/problems"
 import { RollingMarquee } from "@/components/landing-page/rolling-marquee"
+import { TestimonialsSection } from "@/components/landing-page/testimonials"
 import { useToggleTheme } from "@/components/use-theme"
 import { Feature } from "motion"
 
@@ -35,6 +36,7 @@ export default function Page() {
       <HowItWorksSection />
       <FeaturesSection />
       <PricingSection />
+      <TestimonialsSection />
     </div>
   )
 }
