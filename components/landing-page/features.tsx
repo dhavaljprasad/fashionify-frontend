@@ -46,9 +46,12 @@ const featuresData = [
   },
 ]
 
-export const FeaturesSection = () => {
+export const FeaturesSection = ({ id }: { id?: string }) => {
   return (
-    <div className="flex h-fit w-full flex-col items-start justify-center gap-4 bg-background-secondary px-4 py-16 sm:px-16">
+    <div
+      id={id}
+      className="flex h-fit w-full flex-col items-start justify-center gap-4 bg-background-secondary px-4 py-16 sm:px-16"
+    >
       <span className="text-xs font-semibold text-text">WHAT YOU GET</span>
       <div className="flex w-full flex-col items-center justify-between gap-4 xl:flex-row xl:items-end xl:gap-0">
         <div className="flex flex-col items-start justify-center gap-2">

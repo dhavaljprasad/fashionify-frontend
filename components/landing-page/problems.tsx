@@ -26,9 +26,12 @@ const problems = [
   },
 ]
 
-export const ProblemsSection = () => {
+export const ProblemsSection = ({ id }: { id?: string }) => {
   return (
-    <div className="flex h-fit w-full flex-col items-start justify-between gap-4 bg-background-secondary px-4 py-16 sm:px-16 lg:flex-row lg:items-center">
+    <div
+      id={id}
+      className="flex h-fit w-full flex-col items-start justify-between gap-4 bg-background-secondary px-4 py-16 sm:px-16 lg:flex-row lg:items-center"
+    >
       <div className="flex h-fit w-full flex-col items-start justify-center gap-4 lg:max-w-2xl">
         <span className="text-xs font-semibold text-text">THE REALITY</span>
 

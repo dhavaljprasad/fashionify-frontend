@@ -28,9 +28,12 @@ const howItWorksData = [
   },
 ]
 
-export const HowItWorksSection = () => {
+export const HowItWorksSection = ({ id }: { id?: string }) => {
   return (
-    <div className="flex h-fit w-full flex-col items-center justify-center gap-4 px-4 py-16 sm:px-16">
+    <div
+      id={id}
+      className="flex h-fit w-full flex-col items-center justify-center gap-4 px-4 py-16 sm:px-16"
+    >
       <span className="text-xs font-semibold text-text">THE FLOW</span>
       <h1 className="text-center text-6xl font-bold text-text">
         One linear flow. <span className="text-accent">Three use cases.</span>

@@ -30,9 +30,12 @@ const pricingData = [
   },
 ]
 
-export const PricingSection = () => {
+export const PricingSection = ({ id }: { id?: string }) => {
   return (
-    <div className="flex h-fit w-full flex-col items-center justify-center gap-4 px-4 py-16 sm:px-16">
+    <div
+      id={id}
+      className="flex h-fit w-full flex-col items-center justify-center gap-4 px-4 py-16 sm:px-16"
+    >
       <span className="text-xs font-semibold text-text">PRICING</span>
       <h1 className="text-center text-6xl font-bold text-text">
         Pick your <span className="text-accent">plan</span>
