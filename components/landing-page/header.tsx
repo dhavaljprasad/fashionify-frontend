@@ -1,5 +1,5 @@
 "use client"
-
+import { useRouter } from "next/navigation"
 import { ButtonPrimary } from "../modular/button"
 
 export const LandingPageHeader = ({
@@ -7,6 +7,8 @@ export const LandingPageHeader = ({
 }: {
   navItems: { label: string; href?: string }[]
 }) => {
+  const router = useRouter()
+
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
     href?: string
@@ -39,7 +41,10 @@ export const LandingPageHeader = ({
         ))}
       </div>
       <div className="hidden items-center justify-center gap-4 sm:flex">
-        <ButtonPrimary text="Start Free Trial" />
+        <ButtonPrimary
+          text="Start Free Trial"
+          onClick={() => router.push("/auth")}
+        />
       </div>
     </div>
   )

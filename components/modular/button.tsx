@@ -7,15 +7,18 @@ export const ButtonPrimary = ({
   icon,
   buttonClass,
   buttonTextClass,
+  onClick,
 }: {
   text: string
   icon?: LucideIcon
   buttonClass?: string
   buttonTextClass?: string
+  onClick: () => void
 }) => {
   return (
     <div
       className={`group flex h-auto w-fit cursor-pointer items-center justify-center gap-1 bg-contrast px-4 py-2 transition-colors duration-200 hover:bg-accent ${buttonClass || ""}`}
+      onClick={onClick}
     >
       <span
         className={`text-xs font-semibold text-background-primary ${buttonTextClass || ""}`}
