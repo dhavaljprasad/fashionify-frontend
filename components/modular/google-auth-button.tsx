@@ -1,8 +1,10 @@
 "use client"
 
 import { useCallback } from "react"
+import { useRouter } from "next/navigation"
 import Script from "next/script"
 import axios from "axios"
+import { setToken } from "@/lib/auth"
 
 declare global {
   interface Window {
@@ -11,6 +13,8 @@ declare global {
 }
 
 export function GoogleSignInButton() {
+  const router = useRouter()
+
   const handleCredentialResponse = useCallback((response: any) => {
     console.log("Google credential response:", response)
     const idToken = response.credential as string
@@ -20,16 +24,17 @@ export function GoogleSignInButton() {
   const sendCredentials = async (creds: string) => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth`, // adjust endpoint
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/sign-in`,
         {
-          credential: creds, // actually sending data now
+          credential: creds,
         }
       )
 
       // success check (depends on your backend)
       if (response.status === 200) {
-        // router.push("/dashboard")
+        setToken(response.data.data.access_token)
         console.log("success", response.data)
+        router.push("/app")
       }
     } catch (e: any) {
       console.error("Error:", e?.response?.data || e.message)
