@@ -1,13 +1,17 @@
 "use client"
-import Image from "next/image"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { WordRotate } from "@/components/ui/word-rotate"
 import { ButtonGroup, ButtonPrimary, ButtonSecondary } from "../modular/button"
+import { useRouter } from "next/navigation"
 
 import { ArrowRight, Play } from "lucide-react"
+import { getCurrentUser } from "@/lib/user"
 
 export const HeroSection = () => {
   const [selectedPreview, setSelectedPreview] = useState("Case I")
+  const [user, setUser] = useState()
+
+  const router = useRouter()
 
   const heroPreview = [
     {
@@ -38,6 +42,14 @@ export const HeroSection = () => {
     },
   ]
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userInfo = await getCurrentUser()
+      setUser(userInfo)
+    }
+    fetchUser()
+  }, [])
+
   return (
     <div className="flex h-fit w-full flex-col items-start justify-between gap-4 px-4 sm:px-16 lg:flex-row lg:items-center">
       <div className="flex h-screen w-full flex-col items-start justify-center gap-4 lg:max-w-2xl">
@@ -63,7 +75,20 @@ export const HeroSection = () => {
           seconds, built for cloth sellers, tailors, and every-day styling.
         </span>
         <div className="flex items-start justify-center gap-4">
-          <ButtonPrimary text="Start Free Trial" icon={ArrowRight} />
+          {user ? (
+            <ButtonPrimary
+              text="Start Now"
+              onClick={() => router.push("/app")}
+              icon={ArrowRight}
+            />
+          ) : (
+            <ButtonPrimary
+              text="Start Free Trial"
+              onClick={() => router.push("/auth")}
+              icon={ArrowRight}
+            />
+          )}
+
           <ButtonSecondary text="See Demo" icon={Play} />
         </div>
       </div>
