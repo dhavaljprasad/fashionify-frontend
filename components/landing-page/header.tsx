@@ -2,14 +2,14 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ButtonPrimary } from "../modular/button"
-import { getCurrentUser } from "@/lib/user"
+import { getCurrentUser, UserType } from "@/lib/user"
 
 export const LandingPageHeader = ({
   navItems,
 }: {
   navItems: { label: string; href?: string }[]
 }) => {
-  const [user, setUser] = useState()
+  const [user, setUser] = useState<UserType | null>(null)
   const router = useRouter()
 
   const handleClick = (

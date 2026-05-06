@@ -5,11 +5,11 @@ import { ButtonGroup, ButtonPrimary, ButtonSecondary } from "../modular/button"
 import { useRouter } from "next/navigation"
 
 import { ArrowRight, Play } from "lucide-react"
-import { getCurrentUser } from "@/lib/user"
+import { getCurrentUser, UserType } from "@/lib/user"
 
 export const HeroSection = () => {
   const [selectedPreview, setSelectedPreview] = useState("Case I")
-  const [user, setUser] = useState()
+  const [user, setUser] = useState<UserType | null>()
 
   const router = useRouter()
 
