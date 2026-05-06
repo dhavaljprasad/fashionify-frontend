@@ -71,17 +71,23 @@ type ButtonGroupProps = {
 export const ButtonGroup = ({
   data,
   activeText,
+  wholeClass = "",
+  buttonClass = "",
 }: {
   data: ButtonGroupProps[]
   activeText: string
+  wholeClass?: string
+  buttonClass?: string
 }) => {
   return (
-    <div className="flex w-auto items-center justify-center border border-contrast">
+    <div
+      className={`flex w-auto items-center justify-center border border-contrast ${wholeClass}`}
+    >
       {data.map((item, index) => {
         return (
           <div
             key={index}
-            className={`px-4 py-2 ${activeText === item.text ? "bg-accent text-black" : "cursor-pointer hover:bg-contrast hover:text-black"} transition-colors duration-200`}
+            className={`px-4 py-2 ${activeText === item.text ? "bg-accent text-black" : "cursor-pointer hover:bg-contrast hover:text-black"} transition-colors duration-200 ${buttonClass}`}
             onClick={item.onClick}
           >
             <span className="text-sm font-semibold">{item.text}</span>
