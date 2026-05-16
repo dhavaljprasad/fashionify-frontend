@@ -168,7 +168,7 @@ function page() {
         const conversation_id = convRes.data.conversation_id
         const { token, expire, signature } = convRes.data.imgkit_auth
 
-        const file_name = "user_image"
+        const file_name = "user_image.webp"
 
         // uploading image
         const res = await fetch(capturedImage)
@@ -182,6 +182,7 @@ function page() {
           file: blob,
           fileName: file_name,
           folder: `/${user?.id}/uploads/${conversation_id}`,
+          useUniqueFileName: false,
         })
         console.log(uploadResponse)
         try {
