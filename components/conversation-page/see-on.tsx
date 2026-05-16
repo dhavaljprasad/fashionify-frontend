@@ -1,7 +1,14 @@
 "use client"
 import { useState, useEffect, useRef } from "react"
+import { upload } from "@imagekit/next"
 import { ButtonGroup } from "../modular/button"
+import { api } from "@/lib/api"
+import { UserType, getCurrentUser } from "@/lib/user"
 import { ArrowRight, Images, X, Check } from "lucide-react"
+import { useParams } from "next/navigation"
+
+const NEXT_PUBLIC_IMGKIT_PUBLIC_KEY =
+  process.env.NEXT_PUBLIC_IMGKIT_PUBLIC_KEY || ""
 
 export const SeeOnComponent = () => {
   // variables
@@ -9,10 +16,13 @@ export const SeeOnComponent = () => {
     "E-Commerce Link" | "Upload Picture"
   >("E-Commerce Link")
   const [capturedImage, setCapturedImage] = useState<string>("")
+  const [user, setUser] = useState<UserType | null>(null)
 
   // refs
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const params = useParams()
 
   const tabsData = [
     {
@@ -157,10 +167,72 @@ export const SeeOnComponent = () => {
     inputRef.current?.click()
   }
 
+  const onConfirmImage = async () => {
+    try {
+      // if (uploading) return
+      // setUploading(true)
+      const convRes = await api.get("/api/conversation/init-upload")
+
+      if (convRes.status === 200) {
+        const { token, expire, signature } = convRes.data.imgkit_auth
+        const conversation_id = params.conversation_id as string
+        const file_name = `user_see_on_image.webp`
+
+        // uploading image
+        const res = await fetch(capturedImage)
+        const blob = await res.blob()
+        const uploadResponse = await upload({
+          // Authentication parameters
+          expire: expire,
+          token: token,
+          signature: signature,
+          publicKey: NEXT_PUBLIC_IMGKIT_PUBLIC_KEY,
+          file: blob,
+          fileName: file_name,
+          folder: `/${user?.id}/uploads/${conversation_id}`,
+          useUniqueFileName: false,
+        })
+        console.log(uploadResponse)
+        try {
+          const saveMsgRes = await api.post(
+            "/api/conversation/save-user-image",
+            {
+              conversation_id: conversation_id,
+              file_name: uploadResponse.name,
+            }
+          )
+          if (saveMsgRes.status === 200) {
+            const seeOnRes = await api.post("/api/conversation/see-on", {
+              conversation_id: conversation_id,
+              link: uploadResponse.url,
+            })
+          }
+        } catch (e) {
+          throw e
+        }
+      }
+      // setUploading(false)
+    } catch (e) {
+      console.log(
+        "Unexpected error occured uploading the image and geting conversation_id as",
+        e
+      )
+      // setUploading(false)
+    }
+  }
+
   useEffect(() => {
     if (activeTab === "E-Commerce Link") return
     startCamera()
   }, [activeTab])
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userInfo = await getCurrentUser()
+      setUser(userInfo)
+    }
+    fetchUser()
+  }, [])
 
   return (
     <div className="flex w-full flex-col items-center justify-center gap-2 bg-background-secondary p-4">
@@ -200,7 +272,10 @@ export const SeeOnComponent = () => {
                 className="flex h-24 w-24 items-center justify-center bg-accent"
                 onClick={() => {}}
               >
-                <Check className="text-contrast" onClick={() => {}} />
+                <Check
+                  className="text-contrast"
+                  onClick={() => onConfirmImage()}
+                />
               </div>
             </div>
           </div>
@@ -240,7 +315,10 @@ export const SeeOnComponent = () => {
           </div>
         ))}
 
-      <div className="mt-2 flex w-full items-center justify-center gap-1">
+      <div
+        className={`${activeTab === "Upload Picture" ? "mt-14" : "mt-2"} flex w-full items-center justify-center gap-1`}
+        onClick={() => onConfirmImage()}
+      >
         <span className="text-sm font-semibold text-accent">
           Generate Preview
         </span>
