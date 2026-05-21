@@ -1,16 +1,29 @@
 "use client"
-import { useState, useEffect, useRef } from "react"
+import {
+  useState,
+  useEffect,
+  useRef,
+  type Dispatch,
+  type SetStateAction,
+} from "react"
 import { upload } from "@imagekit/next"
 import { ButtonGroup } from "../modular/button"
 import { api } from "@/lib/api"
 import { UserType, getCurrentUser } from "@/lib/user"
 import { ArrowRight, Images, X, Check } from "lucide-react"
 import { useParams } from "next/navigation"
+import { ConversationData } from "@/app/[conversation_id]/page"
 
 const NEXT_PUBLIC_IMGKIT_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_IMGKIT_PUBLIC_KEY || ""
 
-export const SeeOnComponent = () => {
+export const SeeOnComponent = ({
+  setConversationData,
+  setPoolingId,
+}: {
+  setPoolingId: Dispatch<SetStateAction<string>>
+  setConversationData: Dispatch<SetStateAction<ConversationData[]>>
+}) => {
   // variables
   const [activeTab, setActiveTab] = useState<
     "E-Commerce Link" | "Upload Picture"
@@ -169,8 +182,6 @@ export const SeeOnComponent = () => {
 
   const onConfirmImage = async () => {
     try {
-      // if (uploading) return
-      // setUploading(true)
       const convRes = await api.get("/api/conversation/init-upload")
 
       if (convRes.status === 200) {
@@ -181,8 +192,8 @@ export const SeeOnComponent = () => {
         // uploading image
         const res = await fetch(capturedImage)
         const blob = await res.blob()
+
         const uploadResponse = await upload({
-          // Authentication parameters
           expire: expire,
           token: token,
           signature: signature,
@@ -192,13 +203,15 @@ export const SeeOnComponent = () => {
           folder: `/${user?.id}/uploads/${conversation_id}`,
           useUniqueFileName: false,
         })
-        console.log(uploadResponse)
+        const uploadedUrl = uploadResponse.url
+        if (!uploadedUrl) return
         try {
           const saveMsgRes = await api.post(
-            "/api/conversation/save-user-image",
+            "/api/conversation/save-see-on-image",
             {
               conversation_id: conversation_id,
               file_name: uploadResponse.name,
+              text: uploadResponse.url,
             }
           )
           if (saveMsgRes.status === 200) {
@@ -206,6 +219,15 @@ export const SeeOnComponent = () => {
               conversation_id: conversation_id,
               link: uploadResponse.url,
             })
+            setConversationData((prev) => [
+              ...prev,
+              {
+                role: "user",
+                text: uploadedUrl,
+                images: [uploadedUrl],
+              },
+            ])
+            setPoolingId(seeOnRes.data.pooling_id)
           }
         } catch (e) {
           throw e
