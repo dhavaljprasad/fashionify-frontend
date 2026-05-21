@@ -23,6 +23,7 @@ function page() {
   const [selectedTryOn, setSelectedTryOn] = useState<"See On" | "Dress Up">(
     "See On"
   )
+  const [poolingId, setPoolingId] = useState("")
 
   const params = useParams()
   const conversation_id = params.conversation_id as string
@@ -71,6 +72,32 @@ function page() {
     loadConversationHistory(conversation_id)
   }, [conversation_id])
 
+  useEffect(() => {
+    if (!poolingId || poolingId === "") return
+    const interval = setInterval(async () => {
+      try {
+        const res = await api.get(`/api/pooling/${poolingId}`)
+        console.log(res.data, "pooling res")
+
+        if (res.data.status === "completed") {
+          setConversationData((prev) => [
+            ...prev,
+            {
+              role: "ai",
+              text: "Here's how the outfit looks on you!",
+              images: [res.data.data.see_on_image_url.url],
+            },
+          ])
+          clearInterval(interval)
+          setPoolingId("")
+        }
+      } catch (e) {
+        console.log("Unexpected error occured while polling as:", e)
+      }
+    }, 15000)
+    return () => clearInterval(interval)
+  }, [poolingId])
+
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-start gap-4 bg-background-primary px-4 sm:px-16">
       <AppPageHeader
@@ -87,7 +114,10 @@ function page() {
           <TryOnComponent selectTryOn={selectTryOnOption} />
         )}
         {conversationData.length === 4 && selectedTryOn === "See On" && (
-          <SeeOnComponent />
+          <SeeOnComponent
+            setConversationData={setConversationData}
+            setPoolingId={setPoolingId}
+          />
         )}
       </div>
     </div>
