@@ -9,11 +9,13 @@ type MessagesBoxProps = {
 export const MessagesBox = ({ data }: MessagesBoxProps) => {
   return (
     <div
-      className={`flex h-auto w-full flex-col ${data.role === "user" ? "items-end" : "items-start"} justify-center`}
+      className={`flex h-auto w-full flex-col gap-2 ${data.role === "user" ? "items-end" : "items-start"} justify-center`}
     >
       {/* images block  */}
       {data.images && data.images.length > 0 && (
-        <div className="relative mt-4 flex w-full justify-end">
+        <div
+          className={`relative mt-4 flex w-full ${data.role === "user" ? "justify-end" : "justify-start"}`}
+        >
           <div className="relative h-[300px] w-[220px]">
             {data.images.map((imageUrl, index) => (
               <img
@@ -36,7 +38,7 @@ export const MessagesBox = ({ data }: MessagesBoxProps) => {
       {/* text block  */}
       {data.text && (
         <span
-          className={`text-sm ${data.role === "user" ? "bg-background-secondary p-2" : ""}`}
+          className={`max-w-full text-sm break-words ${data.role === "user" ? "bg-background-secondary p-2" : ""}`}
         >
           {data.text}
         </span>
