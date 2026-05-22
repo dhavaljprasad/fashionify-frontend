@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { Images, PenLine } from "lucide-react"
 import { getCurrentUser, UserType } from "@/lib/user"
 import { ButtonSecondary } from "./button"
+import { api } from "@/lib/api"
 
 export const SideBar = () => {
   const [user, setUser] = useState<UserType | null>()
@@ -23,12 +24,22 @@ export const SideBar = () => {
     },
   ]
 
+  const getUserConversations = async () => {
+    try {
+      const res = await api.get("/api/conversation/user-conversations")
+      console.log("User Conversations:", res.data)
+    } catch (error) {
+      console.error("Error fetching user conversations:", error)
+    }
+  }
+
   useEffect(() => {
     const fetchUser = async () => {
       const userInfo = await getCurrentUser()
       setUser(userInfo)
     }
     fetchUser()
+    getUserConversations()
   }, [])
   return (
     <div className="fixed left-0 z-5 flex h-screen w-72 flex-col items-center justify-between gap-2 bg-background-secondary px-4 pt-20 pb-4">
