@@ -84,8 +84,8 @@ function page() {
             ...prev,
             {
               role: "ai",
-              text: "Here's how the outfit looks on you!",
-              images: [res.data.data.see_on_image_url.url],
+              text: res.data.data.text,
+              images: [res.data.data.see_on_image_url],
             },
           ])
           clearInterval(interval)
