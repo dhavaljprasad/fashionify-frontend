@@ -287,7 +287,12 @@ function page() {
           onChange={handleFile}
         />
 
-        <div className="flex h-auto w-full items-center justify-start gap-2 py-4 sm:w-2/5 sm:flex-col lg:h-full lg:w-full lg:flex-col lg:justify-center">
+        <div
+          className={`flex h-auto w-full items-center justify-start gap-2 py-4 sm:w-2/5 sm:flex-col lg:h-full lg:w-full lg:flex-col lg:justify-center ${capturedImage.length > 0 ? "hidden" : ""}`}
+        >
+          <h1 className="mb-8 hidden text-4xl font-bold text-text lg:block">
+            Let's get started!
+          </h1>
           <div
             className="flex cursor-pointer flex-row items-center justify-center gap-2"
             onClick={capturedImage ? () => {} : () => openPicker()}
@@ -323,32 +328,16 @@ function page() {
 
           {userImages.length > 0 ? (
             <div className="flex hidden h-auto w-full flex-col items-center justify-center lg:block">
-              <Marquee pauseOnHover={true}>
+              <Marquee pauseOnHover={true} className="[--duration:60s]">
                 <div className="flex gap-4">
-                  {userImages
-                    .slice(0, Math.ceil(userImages.length / 2))
-                    .map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        className="h-48 w-auto cursor-pointer object-cover"
-                        onClick={() => setCapturedImage(img)}
-                      />
-                    ))}
-                </div>
-              </Marquee>
-              <Marquee reverse pauseOnHover={true}>
-                <div className="flex gap-4">
-                  {userImages
-                    .slice(Math.ceil(userImages.length / 2), userImages.length)
-                    .map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
-                        className="h-48 w-auto cursor-pointer object-cover"
-                        onClick={() => setCapturedImage(img)}
-                      />
-                    ))}
+                  {userImages.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      className="h-96 w-auto cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
+                      onClick={() => setCapturedImage(img)}
+                    />
+                  ))}
                 </div>
               </Marquee>
             </div>
