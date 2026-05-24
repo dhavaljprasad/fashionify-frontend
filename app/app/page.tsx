@@ -20,6 +20,7 @@ function page() {
   const [capturedImage, setCapturedImage] = useState<string>("")
   const [user, setUser] = useState<UserType | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [userImages, setUserImages] = useState<string[]>([])
 
   // refs
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -167,7 +168,6 @@ function page() {
       if (convRes.status === 200) {
         const conversation_id = convRes.data.conversation_id
         const { token, expire, signature } = convRes.data.imgkit_auth
-
         const file_name = "user_image.webp"
 
         // uploading image
@@ -184,11 +184,13 @@ function page() {
           folder: `/${user?.id}/uploads/${conversation_id}`,
           useUniqueFileName: false,
         })
-        console.log(uploadResponse)
+
+        // saving the uploaded image to the conversation
         try {
           const saveMsgRes = await api.post(
             "/api/conversation/save-user-image",
             {
+              new: true,
               conversation_id: conversation_id,
               file_name: uploadResponse.name,
             }
@@ -210,6 +212,17 @@ function page() {
     }
   }
 
+  const getUserUploadedImages = async () => {
+    try {
+      const res = await api.get("/api/app/user-models")
+      if (res.status === 200) {
+        setUserImages(res.data.data)
+      }
+    } catch (e) {
+      console.log("Error fetching user uploaded images", e)
+    }
+  }
+
   useEffect(() => {
     startCamera()
     const fetchUser = async () => {
@@ -217,6 +230,7 @@ function page() {
       setUser(userInfo)
     }
     fetchUser()
+    getUserUploadedImages()
   }, [])
 
   return (
@@ -226,9 +240,9 @@ function page() {
         setShowSidebar={() => setSidebar(!sidebar)}
       />
       {sidebar && <SideBar />}
-      <div className="flex h-full w-full flex-col items-center justify-between pt-20">
+      <div className="flex h-full w-full flex-col items-center justify-between pt-20 sm:flex-row sm:justify-center sm:gap-4 sm:pt-16 lg:flex-col">
         {capturedImage ? (
-          <div className="relative aspect-[2/3] h-fit max-h-[70dvh]">
+          <div className="relative aspect-[2/3] h-fit max-h-[70dvh] sm:max-h-[75dvh]">
             <img src={capturedImage} className="h-full w-full object-cover" />
             <div
               className={`absolute -bottom-12 flex h-24 w-full items-center justify-around ${uploading ? "opacity-50" : ""}`}
@@ -251,7 +265,7 @@ function page() {
             </div>
           </div>
         ) : (
-          <div className="relative aspect-[2/3] h-fit max-h-[70dvh]">
+          <div className="relative aspect-[2/3] h-fit max-h-[70dvh] sm:max-h-[75dvh] lg:hidden">
             <video
               ref={videoRef}
               autoPlay
@@ -272,13 +286,39 @@ function page() {
           onChange={handleFile}
         />
 
-        <div className="flex h-auto w-full items-center justify-start gap-2 py-4">
-          <Images
-            className="text-text"
-            size={42}
+        <div className="flex h-auto w-full items-center justify-start gap-2 py-4 sm:w-2/5 sm:flex-col lg:w-full lg:flex-col">
+          <div
+            className="flex flex-row items-center justify-center gap-2"
             onClick={capturedImage ? () => {} : () => openPicker()}
+          >
+            <Images className="text-text" size={42} />
+            <span className="hidden font-semibold text-text sm:block">
+              Upload from Device
+            </span>
+          </div>
+          <Separator
+            orientation="vertical"
+            className="bg-text sm:hidden lg:block"
           />
-          <Separator orientation="vertical" className="bg-text" />
+          <Separator
+            orientation="horizontal"
+            className="hidden w-full bg-text sm:block lg:block"
+          />
+          <span className="hidden text-sm text-text sm:block lg:hidden">
+            Select from Prev. Uploaded
+          </span>
+          {userImages.length > 0 ? (
+            <div className="scrollbar-thin flex gap-2 overflow-auto scrollbar-thumb-text scrollbar-track-transparent sm:grid sm:h-[50dvh] sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center lg:justify-center">
+              {userImages.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  className="w-25 object-cover lg:h-36"
+                  onClick={() => setCapturedImage(img)}
+                />
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     </div>
