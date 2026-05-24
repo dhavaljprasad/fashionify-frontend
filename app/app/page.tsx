@@ -8,6 +8,7 @@ import { SideBar } from "@/components/modular/side-bar"
 import { Separator } from "@/components/ui/separator"
 import { api } from "@/lib/api"
 import { getCurrentUser, UserType } from "@/lib/user"
+import { Marquee } from "@/components/ui/marquee"
 
 import { Images, Check, X } from "lucide-react"
 
@@ -286,9 +287,9 @@ function page() {
           onChange={handleFile}
         />
 
-        <div className="flex h-auto w-full items-center justify-start gap-2 py-4 sm:w-2/5 sm:flex-col lg:w-full lg:flex-col">
+        <div className="flex h-auto w-full items-center justify-start gap-2 py-4 sm:w-2/5 sm:flex-col lg:h-full lg:w-full lg:flex-col lg:justify-center">
           <div
-            className="flex flex-row items-center justify-center gap-2"
+            className="flex cursor-pointer flex-row items-center justify-center gap-2"
             onClick={capturedImage ? () => {} : () => openPicker()}
           >
             <Images className="text-text" size={42} />
@@ -304,19 +305,52 @@ function page() {
             orientation="horizontal"
             className="hidden w-full bg-text sm:block lg:block"
           />
-          <span className="hidden text-sm text-text sm:block lg:hidden">
+          <span className="hidden text-sm text-text sm:block">
             Select from Prev. Uploaded
           </span>
           {userImages.length > 0 ? (
-            <div className="scrollbar-thin flex gap-2 overflow-auto scrollbar-thumb-text scrollbar-track-transparent sm:grid sm:h-[50dvh] sm:grid-cols-2 lg:flex lg:flex-wrap lg:items-center lg:justify-center">
+            <div className="scrollbar-thin flex gap-2 overflow-auto scrollbar-thumb-text scrollbar-track-transparent sm:grid sm:h-[50dvh] sm:grid-cols-2 lg:hidden">
               {userImages.map((img, index) => (
                 <img
                   key={index}
                   src={img}
-                  className="w-25 object-cover lg:h-36"
+                  className="w-20 cursor-pointer object-cover"
                   onClick={() => setCapturedImage(img)}
                 />
               ))}
+            </div>
+          ) : null}
+
+          {userImages.length > 0 ? (
+            <div className="flex hidden h-auto w-full flex-col items-center justify-center lg:block">
+              <Marquee pauseOnHover={true}>
+                <div className="flex gap-4">
+                  {userImages
+                    .slice(0, Math.ceil(userImages.length / 2))
+                    .map((img, index) => (
+                      <img
+                        key={index}
+                        src={img}
+                        className="h-48 w-auto cursor-pointer object-cover"
+                        onClick={() => setCapturedImage(img)}
+                      />
+                    ))}
+                </div>
+              </Marquee>
+              <Marquee reverse pauseOnHover={true}>
+                <div className="flex gap-4">
+                  {userImages
+                    .slice(Math.ceil(userImages.length / 2), userImages.length)
+                    .map((img, index) => (
+                      <img
+                        key={index}
+                        src={img}
+                        className="h-48 w-auto cursor-pointer object-cover"
+                        onClick={() => setCapturedImage(img)}
+                      />
+                    ))}
+                </div>
+              </Marquee>
             </div>
           ) : null}
         </div>
