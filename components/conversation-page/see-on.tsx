@@ -13,6 +13,7 @@ import { UserType, getCurrentUser } from "@/lib/user"
 import { ArrowRight, Images, X, Check } from "lucide-react"
 import { useParams } from "next/navigation"
 import { ConversationData } from "@/app/[conversation_id]/page"
+import { isShoppingProductUrl } from "@/utils/regex"
 
 const NEXT_PUBLIC_IMGKIT_PUBLIC_KEY =
   process.env.NEXT_PUBLIC_IMGKIT_PUBLIC_KEY || ""
@@ -30,6 +31,7 @@ export const SeeOnComponent = ({
   >("E-Commerce Link")
   const [capturedImage, setCapturedImage] = useState<string>("")
   const [user, setUser] = useState<UserType | null>(null)
+  const [inputLink, setInputLink] = useState<string>("")
 
   // refs
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -182,64 +184,95 @@ export const SeeOnComponent = ({
 
   const onConfirmImage = async () => {
     try {
-      const convRes = await api.get("/api/conversation/init-upload")
+      if (activeTab === "Upload Picture") {
+        const convRes = await api.get("/api/conversation/init-upload")
 
-      if (convRes.status === 200) {
-        const { token, expire, signature } = convRes.data.imgkit_auth
-        const conversation_id = params.conversation_id as string
-        const file_name = `user_see_on_image.webp`
+        if (convRes.status === 200) {
+          const { token, expire, signature } = convRes.data.imgkit_auth
+          const conversation_id = params.conversation_id as string
+          const file_name = `user_see_on_image.webp`
 
-        // uploading image
-        const res = await fetch(capturedImage)
-        const blob = await res.blob()
+          // uploading image
+          const res = await fetch(capturedImage)
+          const blob = await res.blob()
 
-        const uploadResponse = await upload({
-          expire: expire,
-          token: token,
-          signature: signature,
-          publicKey: NEXT_PUBLIC_IMGKIT_PUBLIC_KEY,
-          file: blob,
-          fileName: file_name,
-          folder: `/${user?.id}/uploads/${conversation_id}`,
-          useUniqueFileName: false,
-        })
-        const uploadedUrl = uploadResponse.url
-        if (!uploadedUrl) return
-        try {
-          const saveMsgRes = await api.post(
-            "/api/conversation/save-see-on-image",
-            {
-              conversation_id: conversation_id,
-              file_name: uploadResponse.name,
-              text: uploadResponse.url,
+          const uploadResponse = await upload({
+            expire: expire,
+            token: token,
+            signature: signature,
+            publicKey: NEXT_PUBLIC_IMGKIT_PUBLIC_KEY,
+            file: blob,
+            fileName: file_name,
+            folder: `/${user?.id}/uploads/${conversation_id}`,
+            useUniqueFileName: false,
+          })
+          const uploadedUrl = uploadResponse.url
+          if (!uploadedUrl) return
+          try {
+            const saveMsgRes = await api.post(
+              "/api/conversation/save-see-on-image",
+              {
+                conversation_id: conversation_id,
+                file_name: uploadResponse.name,
+                text: uploadResponse.url,
+              }
+            )
+            if (saveMsgRes.status === 200) {
+              const seeOnRes = await api.post("/api/conversation/see-on", {
+                conversation_id: conversation_id,
+                link: uploadResponse.url,
+              })
+              setConversationData((prev) => [
+                ...prev,
+                {
+                  role: "user",
+                  text: uploadedUrl,
+                  images: [uploadedUrl],
+                },
+              ])
+              setPoolingId(seeOnRes.data.pooling_id)
             }
-          )
-          if (saveMsgRes.status === 200) {
-            const seeOnRes = await api.post("/api/conversation/see-on", {
-              conversation_id: conversation_id,
-              link: uploadResponse.url,
-            })
+          } catch (e) {
+            throw e
+          }
+        }
+      } else if (activeTab === "E-Commerce Link") {
+        if (!isShoppingProductUrl(inputLink)) {
+          alert("Please enter a valid Amazon India or Flipkart product URL.")
+          return
+        }
+        const conversation_id = params.conversation_id as string
+        const saveMsgRes = await api.post(
+          "/api/conversation/save-see-on-image",
+          {
+            conversation_id: conversation_id,
+            text: inputLink,
+          }
+        )
+
+        if (saveMsgRes.status === 200) {
+          const seeOnWorkerCall = await api.post("/api/conversation/see-on", {
+            conversation_id: conversation_id,
+            link: inputLink,
+          })
+          if (seeOnWorkerCall.status === 200) {
             setConversationData((prev) => [
               ...prev,
               {
                 role: "user",
-                text: uploadedUrl,
-                images: [uploadedUrl],
+                text: inputLink,
+                images: [],
               },
             ])
-            setPoolingId(seeOnRes.data.pooling_id)
+            setPoolingId(seeOnWorkerCall.data.pooling_id)
           }
-        } catch (e) {
-          throw e
         }
       }
-      // setUploading(false)
     } catch (e) {
       console.log(
         "Unexpected error occured uploading the image and geting conversation_id as",
         e
       )
-      // setUploading(false)
     }
   }
 
@@ -273,6 +306,8 @@ export const SeeOnComponent = ({
             type="text"
             className="h-auto w-full rounded-none border-none bg-contrast p-2 text-sm font-semibold text-background-primary outline-none focus:ring-0 focus:outline-none"
             placeholder="Paste your link here"
+            value={inputLink}
+            onChange={(e) => setInputLink(e.target.value)}
           />
         </div>
       )}
@@ -338,7 +373,7 @@ export const SeeOnComponent = ({
         ))}
 
       <div
-        className={`${activeTab === "Upload Picture" ? "mt-14" : "mt-2"} flex w-full items-center justify-center gap-1`}
+        className={`${activeTab === "Upload Picture" ? "mt-14" : "mt-2"} flex w-full cursor-pointer items-center justify-center gap-1`}
         onClick={() => onConfirmImage()}
       >
         <span className="text-sm font-semibold text-accent">
