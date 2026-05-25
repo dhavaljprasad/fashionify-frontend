@@ -32,6 +32,7 @@ export const SeeOnComponent = ({
   const [capturedImage, setCapturedImage] = useState<string>("")
   const [user, setUser] = useState<UserType | null>(null)
   const [inputLink, setInputLink] = useState<string>("")
+  const [uploading, setUploading] = useState<boolean>(false)
 
   // refs
   const videoRef = useRef<HTMLVideoElement | null>(null)
@@ -183,6 +184,8 @@ export const SeeOnComponent = ({
   }
 
   const onConfirmImage = async () => {
+    if (uploading) return
+    setUploading(true)
     try {
       if (activeTab === "Upload Picture") {
         const convRes = await api.get("/api/conversation/init-upload")
@@ -273,6 +276,8 @@ export const SeeOnComponent = ({
         "Unexpected error occured uploading the image and geting conversation_id as",
         e
       )
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -319,20 +324,10 @@ export const SeeOnComponent = ({
 
             <div className="absolute -bottom-12 flex h-24 w-full items-center justify-around">
               <div
-                className="flex h-24 w-24 items-center justify-center bg-contrast"
-                onClick={() => {}}
+                className={`flex h-24 w-24 items-center justify-center bg-contrast ${uploading ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                onClick={() => (uploading ? null : onDiscardImage())}
               >
-                <X className="text-accent" onClick={() => onDiscardImage()} />
-              </div>
-
-              <div
-                className="flex h-24 w-24 items-center justify-center bg-accent"
-                onClick={() => {}}
-              >
-                <Check
-                  className="text-contrast"
-                  onClick={() => onConfirmImage()}
-                />
+                <X className="text-accent" />
               </div>
             </div>
           </div>
@@ -348,12 +343,9 @@ export const SeeOnComponent = ({
             <div className="absolute -bottom-12 z-5 flex h-24 w-full items-center justify-around">
               <div
                 className="flex h-24 w-24 items-center justify-center bg-contrast"
-                onClick={() => {}}
+                onClick={() => openPicker()}
               >
-                <Images
-                  className="text-accent"
-                  onClick={capturedImage ? () => {} : () => openPicker()}
-                />
+                <Images className="text-accent" />
               </div>
 
               <div
@@ -373,8 +365,8 @@ export const SeeOnComponent = ({
         ))}
 
       <div
-        className={`${activeTab === "Upload Picture" ? "mt-14" : "mt-2"} flex w-full cursor-pointer items-center justify-center gap-1`}
-        onClick={() => onConfirmImage()}
+        className={`${activeTab === "Upload Picture" ? "mt-14" : "mt-2"} flex w-full cursor-pointer items-center justify-center gap-1 ${uploading ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+        onClick={() => (uploading ? null : onConfirmImage())}
       >
         <span className="text-sm font-semibold text-accent">
           Generate Preview
