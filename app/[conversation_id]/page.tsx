@@ -7,6 +7,8 @@ import { MessagesBox } from "@/components/conversation-page/messages"
 import { api } from "@/lib/api"
 import { TryOnComponent } from "@/components/conversation-page/try-on"
 import { SeeOnComponent } from "@/components/conversation-page/see-on"
+import { DressUpComponent } from "@/components/conversation-page/dress-up"
+import { Spinner } from "@/components/ui/spinner"
 
 export type ConversationData = {
   role: "ai" | "user"
@@ -98,6 +100,17 @@ function page() {
     return () => clearInterval(interval)
   }, [poolingId])
 
+  useEffect(() => {
+    const autoScroll = () => {
+      const element = document.getElementById("auto-scroll")
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" })
+      }
+    }
+
+    autoScroll()
+  }, [conversationData])
+
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-start gap-4 bg-background-primary px-4 sm:px-16">
       <AppPageHeader
@@ -105,7 +118,7 @@ function page() {
         setShowSidebar={() => setSidebar(!sidebar)}
       />
       {sidebar && <SideBar />}
-      <div className="flex h-dvh w-full flex-col items-center justify-start gap-2 pt-20">
+      <div className="h-vh flex w-full flex-col items-center justify-start gap-2 pt-20">
         {conversationData.length > 0 &&
           conversationData.map((item, index) => {
             return <MessagesBox data={item} key={index} />
@@ -119,6 +132,18 @@ function page() {
             setPoolingId={setPoolingId}
           />
         )}
+        {conversationData.length === 4 && selectedTryOn === "Dress Up" && (
+          <DressUpComponent />
+        )}
+        {poolingId && poolingId !== "" && (
+          <div className="flex w-full items-center justify-start p-4">
+            <span className="text-sm text-text">
+              Generating your results...
+            </span>
+            <Spinner className="ml-2 text-text" />
+          </div>
+        )}
+        <div className="h-20" id="auto-scroll" />
       </div>
     </div>
   )
