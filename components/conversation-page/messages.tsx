@@ -4,9 +4,10 @@ import { ConversationData } from "@/app/[conversation_id]/page"
 
 type MessagesBoxProps = {
   data: ConversationData
+  showImageViewer: (images: string[]) => void
 }
 
-export const MessagesBox = ({ data }: MessagesBoxProps) => {
+export const MessagesBox = ({ data, showImageViewer }: MessagesBoxProps) => {
   return (
     <div
       className={`flex h-auto w-full flex-col gap-2 ${data.role === "user" ? "items-end" : "items-start"} justify-center`}
@@ -15,6 +16,7 @@ export const MessagesBox = ({ data }: MessagesBoxProps) => {
       {data.images && data.images.length > 0 && (
         <div
           className={`relative mt-4 flex w-full ${data.role === "user" ? "justify-end" : "justify-start"}`}
+          onClick={() => showImageViewer(data.images)}
         >
           <div className="relative h-[300px] w-[220px]">
             {data.images.map((imageUrl, index) => (

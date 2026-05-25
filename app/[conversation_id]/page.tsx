@@ -9,6 +9,7 @@ import { TryOnComponent } from "@/components/conversation-page/try-on"
 import { SeeOnComponent } from "@/components/conversation-page/see-on"
 import { DressUpComponent } from "@/components/conversation-page/dress-up"
 import { Spinner } from "@/components/ui/spinner"
+import { PopUpImageViewer } from "@/components/modular/pop-up"
 
 export type ConversationData = {
   role: "ai" | "user"
@@ -26,6 +27,8 @@ function page() {
     "See On"
   )
   const [poolingId, setPoolingId] = useState("")
+  const [showImageViewer, setShowImageViewer] = useState(false)
+  const [imageViewerUrls, setImageViewerUrls] = useState<string[]>([])
 
   const params = useParams()
   const conversation_id = params.conversation_id as string
@@ -67,6 +70,11 @@ function page() {
     } catch (e) {
       console.log("Unexpected error occured selecting TryOn as:", e)
     }
+  }
+
+  const showImageViewerHandler = (images: string[]) => {
+    setImageViewerUrls(images)
+    setShowImageViewer(true)
   }
 
   useEffect(() => {
@@ -113,15 +121,27 @@ function page() {
 
   return (
     <div className="relative flex h-screen w-full flex-col items-center justify-start gap-4 bg-background-primary px-4 sm:px-16">
+      {showImageViewer && (
+        <PopUpImageViewer
+          images={imageViewerUrls}
+          close={() => setShowImageViewer(false)}
+        />
+      )}
       <AppPageHeader
         showSidebar={sidebar}
         setShowSidebar={() => setSidebar(!sidebar)}
       />
       {sidebar && <SideBar />}
-      <div className="h-vh flex w-full flex-col items-center justify-start gap-2 pt-20">
+      <div className="flex h-full w-full flex-col items-center justify-start gap-2 overflow-y-auto pt-20">
         {conversationData.length > 0 &&
           conversationData.map((item, index) => {
-            return <MessagesBox data={item} key={index} />
+            return (
+              <MessagesBox
+                data={item}
+                key={index}
+                showImageViewer={showImageViewerHandler}
+              />
+            )
           })}
         {conversationData.length === 2 && (
           <TryOnComponent selectTryOn={selectTryOnOption} />
