@@ -38,7 +38,7 @@ export const MessagesBox = ({ data }: MessagesBoxProps) => {
       {/* text block  */}
       {data.text && (
         <span
-          className={`max-w-[80%] text-sm break-words ${data.role === "user" ? "bg-background-secondary p-2" : ""}`}
+          className={`max-w-[80%] text-sm break-words ${data.role === "user" ? "bg-background-secondary p-2" : "bg-text p-2 text-background-primary"} `}
         >
           {data.text}
         </span>
