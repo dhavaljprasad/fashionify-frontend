@@ -11,8 +11,8 @@ export const PopUpImageViewer = ({
   close: () => void
 }) => {
   return (
-    <div className="absolute z-20 flex h-full w-full flex-col items-center justify-start backdrop-blur-sm">
-      <div className="flex w-full items-center justify-between p-4">
+    <div className="\ absolute z-20 flex h-full w-full flex-col items-center justify-start backdrop-blur-sm">
+      <div className="flex w-full items-center justify-between p-4 sm:px-16">
         <h1>Image Viewer</h1>
         <div className="flex w-auto items-center justify-end gap-2">
           <ButtonPrimary text="Download" onClick={() => {}} />
