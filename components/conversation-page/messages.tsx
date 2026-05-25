@@ -24,7 +24,7 @@ export const MessagesBox = ({ data, showImageViewer }: MessagesBoxProps) => {
                 key={index}
                 src={imageUrl}
                 alt={`Image ${index + 1}`}
-                className="absolute top-0 h-full w-full rounded-2xl object-cover shadow-xl transition-all"
+                className="absolute top-0 h-full w-full cursor-pointer rounded-2xl object-cover shadow-xl transition-all hover:scale-105"
                 style={{
                   right: `${index * 12}px`,
                   transform:
