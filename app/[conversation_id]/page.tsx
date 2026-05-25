@@ -132,7 +132,7 @@ function page() {
         setShowSidebar={() => setSidebar(!sidebar)}
       />
       {sidebar && <SideBar />}
-      <div className="flex h-full w-full flex-col items-center justify-start gap-2 overflow-y-auto pt-20">
+      <div className="scrollbar-none flex h-full w-full flex-col items-center justify-start gap-2 overflow-y-auto pt-20">
         {conversationData.length > 0 &&
           conversationData.map((item, index) => {
             return (
