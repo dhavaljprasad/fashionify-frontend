@@ -4,8 +4,9 @@ import { useParams, useRouter } from "next/navigation"
 
 import { Images, PenLine } from "lucide-react"
 import { getCurrentUser, UserType } from "@/lib/user"
-import { ButtonSecondary } from "./button"
+import { ButtonPrimary, ButtonSecondary } from "./button"
 import { api } from "@/lib/api"
+import { usePWA } from "../../utils/pwa/use"
 
 type ConversationHistoryItem = {
   conversation_id: string
@@ -20,6 +21,8 @@ export const SideBar = () => {
 
   const params = useParams()
   const conversation_id = params.conversation_id as string
+
+  const { canInstall, install, isInstalled } = usePWA()
 
   const sideBarConstOptions = [
     {
@@ -38,7 +41,6 @@ export const SideBar = () => {
     try {
       const res = await api.get("/api/conversation/user-conversations")
       setHistory(res.data.conversations)
-      console.log("User Conversations:", res.data)
     } catch (error) {
       console.error("Error fetching user conversations:", error)
     }
@@ -92,6 +94,13 @@ export const SideBar = () => {
           </div>
         )}
       </div>
+      {isInstalled || !canInstall ? null : (
+        <ButtonPrimary
+          text="Download App"
+          onClick={() => install()}
+          buttonClass="w-full"
+        />
+      )}
       {user ? (
         <div
           className="flex h-auto w-full cursor-pointer gap-2 p-4 hover:bg-background-primary"
