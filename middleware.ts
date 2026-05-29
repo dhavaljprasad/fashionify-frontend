@@ -6,7 +6,14 @@ type JwtPayload = {
   [key: string]: any
 }
 
-const PUBLIC_PATHS = ["/", "/auth"]
+const PUBLIC_PATHS = [
+  "/",
+  "/auth",
+  "/about-us",
+  "/privacy-policy",
+  "/refund-policy",
+  "/terms-and-conditions",
+]
 const COOKIE_NAME = "access_token"
 
 export function middleware(req: NextRequest) {
