@@ -306,14 +306,18 @@ function page() {
             orientation="vertical"
             className="bg-text sm:hidden lg:block"
           />
+
           <Separator
             orientation="horizontal"
             className="hidden w-full bg-text sm:block lg:block"
           />
-          <span className="hidden text-sm text-text sm:block">
-            Select from Prev. Uploaded
-          </span>
-          {userImages.length > 0 ? (
+
+          {userImages.length > 0 && (
+            <span className="hidden text-sm text-text sm:block">
+              Select from Prev. Uploaded
+            </span>
+          )}
+          {userImages?.length > 0 ? (
             <div className="scrollbar-thin flex gap-2 overflow-auto scrollbar-thumb-text scrollbar-track-transparent sm:grid sm:h-[50dvh] sm:grid-cols-2 lg:hidden">
               {userImages.map((img, index) => (
                 <img
