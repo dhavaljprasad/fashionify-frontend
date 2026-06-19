@@ -250,18 +250,15 @@ function page() {
             >
               <div
                 className="flex h-24 w-24 items-center justify-center bg-contrast"
-                onClick={() => {}}
+                onClick={() => onDiscardImage()}
               >
-                <X className="text-accent" onClick={() => onDiscardImage()} />
+                <X className="text-accent" />
               </div>
               <div
                 className="flex h-24 w-24 items-center justify-center bg-accent"
-                onClick={() => {}}
+                onClick={() => onConfirmImage()}
               >
-                <Check
-                  className="text-contrast"
-                  onClick={() => onConfirmImage()}
-                />
+                <Check className="text-contrast" />
               </div>
             </div>
           </div>
