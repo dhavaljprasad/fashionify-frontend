@@ -3,7 +3,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ButtonPrimary } from "../modular/button"
 import { getCurrentUser, UserType } from "@/lib/user"
-import { usePWA } from "@/utils/pwa/use"
 
 import { Menu, X } from "lucide-react"
 
@@ -17,14 +16,12 @@ export const AppPageHeader = ({
   const [user, setUser] = useState<UserType | null>()
   const router = useRouter()
 
-  const { isInstalled, canInstall, install } = usePWA()
-
   const handleInstall = () => {
-    const result = install()
-    if (result.method === "ios-manual") {
-      // show a modal/toast with result.instructions
-      alert(result.instructions)
-    }
+    // const result = install()
+    // if (result.method === "ios-manual") {
+    //   // show a modal/toast with result.instructions
+    //   alert(result.instructions)
+    // }
   }
 
   useEffect(() => {
@@ -53,12 +50,12 @@ export const AppPageHeader = ({
       </div>
       {user ? (
         <div className="flex items-center justify-center gap-4">
-          {isInstalled || !canInstall ? null : (
+          {/* {isInstalled || !canInstall ? null : (
             <ButtonPrimary
               text="Download App"
               onClick={() => handleInstall()}
             />
-          )}
+          )} */}
           <div
             className="h-10 w-10 cursor-pointer overflow-hidden border border-accent"
             onClick={() => router.push("/profile")}
