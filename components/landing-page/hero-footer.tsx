@@ -3,10 +3,10 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowRight, Play } from "lucide-react"
 import { ButtonSecondary, ButtonPrimary } from "../modular/button"
-import { getCurrentUser } from "@/lib/user"
+import { getCurrentUser, UserType } from "@/lib/user"
 
 export const HeroFooterSection = () => {
-  const [user, setUser] = useState()
+  const [user, setUser] = useState<UserType | null>()
   const router = useRouter()
 
   useEffect(() => {
