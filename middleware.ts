@@ -64,6 +64,6 @@ function isTokenValid(token: string | null): boolean {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|icon-192x192.png|icon-512x512.png).*)",
+    // "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|icon-192x192.png|icon-512x512.png).*)",
   ],
 }
