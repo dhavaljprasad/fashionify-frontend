@@ -79,6 +79,7 @@ export const PricingSection = ({ id }: { id?: string }) => {
                 buttonClass="border w-full"
                 buttonTextClass="text-xl"
                 icon={ArrowRight}
+                onClick={() => {}}
               />
             )}
           </div>
