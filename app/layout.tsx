@@ -1,8 +1,8 @@
-import "./globals.css"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "./providers/auth-provider"
 import { Geist_Mono, Figtree, Lora } from "next/font/google"
+import "./globals.css"
 
 const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" })
 
