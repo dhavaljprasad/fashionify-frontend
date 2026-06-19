@@ -1,6 +1,7 @@
 import "./globals.css"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
+import { AuthProvider } from "./providers/auth-provider"
 import { Geist_Mono, Figtree, Lora } from "next/font/google"
 
 const loraHeading = Lora({ subsets: ["latin"], variable: "--font-heading" })
@@ -41,7 +42,9 @@ export default function RootLayout({
     `,
           }}
         />
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
