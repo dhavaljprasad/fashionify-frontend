@@ -153,7 +153,10 @@ function page() {
           />
         )}
         {conversationData.length === 4 && selectedTryOn === "Dress Up" && (
-          <DressUpComponent />
+          <DressUpComponent
+            setConversationData={setConversationData}
+            setPoolingId={setPoolingId}
+          />
         )}
         {poolingId && poolingId !== "" && (
           <div className="flex w-full items-center justify-start p-4">
